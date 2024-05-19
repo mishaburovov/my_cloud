@@ -1,0 +1,52 @@
+.user {
+
+  font-family: 'Ribeye', cursive;
+  margin: 30px 100px;
+  border-bottom: solid 2px white;
+  display: grid;
+  grid-template-columns: 60px auto auto; 
+  align-items: center;
+  transition: all 0.2s ease;
+  margin-top: 20px;
+
+  &:hover {
+      transform: scale(1.02);
+      background-color: #f0f0f0;
+  }
+
+  .user__img {
+      grid-column-start: 1;
+      justify-self: start;
+      height: 40px;
+      width: 40px;
+      background-image: url('../../assets/img/avatar.svg');
+      background-size: cover;
+  }
+
+  .user__buttons {
+      grid-column-start: 3; // Position the buttons in the third column
+      justify-self: end;  // Align the buttons to the right
+      display: grid;
+      grid-gap: 10px; // Space out the buttons
+      grid-auto-flow: column; // Align buttons horizontally
+
+      button {
+        margin-left: 1px;
+        border-radius: 5px;
+        font-size: 15px;
+        font-family: 'Ribeye', cursive;
+        min-height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        text-align: center;
+        color: black;
+        background-color: rgb(240, 240, 73);
+        border: 3px solid #c5a300;
+        border-radius: 4px;
+        transition: transform 0.3s ease-in-out;
+      }
+  }
+}

@@ -1,0 +1,80 @@
+@import "../../../utils/colors";
+
+
+.uploader {
+  height: 400px;
+  width: 400px;
+  position: fixed;
+  background-color: rgb(240, 240, 73); 
+  bottom: 0;
+  right: 0;
+  padding: 20px;
+  border: 5px solid #c5a300;
+  border-radius: 4px;
+  overflow-y: auto;
+  
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+  }
+  &__title {
+    margin-bottom: 15px;
+    color: black;
+    font-size: 30px;
+    font-family: 'Ribeye', cursive;
+  }
+  &__close {
+    top: 10px;
+    right: 10px;
+    font-size: 16px; /* Размер крестика */
+    color: white; /* Белый цвет крестика */
+    background-color: black;
+    cursor: pointer;
+  }
+}
+
+
+.upload-file {
+  margin-bottom: 15px;
+  color: black;
+  font-size: 20px;
+  font-family: 'Ribeye', cursive;
+  background-color: $background-color;
+  border-radius: 8px;
+  margin: 5px 0;
+  padding: 5px 10px;
+
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__progress-bar {
+    height: 2rem;
+    border-radius: 10px;
+    background-color: $font-color;
+    display: flex;
+    margin: 8px 0;
+  }
+
+  &__upload-bar {
+    background-color: rgb(137, 127, 141);
+    border-radius: 8px;
+  }
+  &__percent {
+    color: black;
+    left: 50%;
+    position: absolute;
+  }
+
+  &__close {
+    top: 10px;
+    right: 10px;
+    font-size: 16px; /* Размер крестика */
+    color: white; /* Белый цвет крестика */
+    background-color: black;
+    cursor: pointer;
+  }
+}
