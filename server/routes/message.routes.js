@@ -26,7 +26,7 @@ router.get('/conversation/:userId', authMiddleware, async (req, res) => {
     try {
         const userId = req.params.userId;
         const conversations = await Conversation.find({members: { $in:[userId]}});
-        console.log(userId, conversations)
+     
         const conversationUserData = await Promise.all(conversations.map(async (conversation) => {
             const receivedId = conversation.members.find((member) => member !== userId);
             const user = await User.findById(receivedId);
