@@ -1,20 +1,6 @@
 import axiosInstance from '../axios';
 import { setUser } from '../reducers/userReducer';
 
-// export const registration = async (email, password) => {
-//     try {
-//         const response = await axiosInstance.post('/registration', {
-//             email,
-//             password
-//         });
-//         // alert(response.data.message);
-//         alert(response.data.message);
-//     } catch (e) {
-//         console.error(e);
-//         alert(e.response.data.message);
-//     }
-// };
-
 export const registration = async (email, password) => {
     try {
         const response = await axiosInstance.post('/registration', {

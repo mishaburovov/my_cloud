@@ -99,6 +99,7 @@ import './profile.scss';
 import Chat from "./Chat";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { API_URL } from '../../config';
 
 const Profile = () => {
     const [conversations, setConversations] = useState([]);
@@ -116,7 +117,7 @@ const Profile = () => {
         try {
             console.log(user)
             if (user && user.id) {
-                const response = await axios.get(`http://localhost:5000/api/message/conversation/${user.id}`, {
+                const response = await axios.get(`${API_URL}api/message/conversation/${user.id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 console.log('asdf', response.data.conversationUserData)
