@@ -19,9 +19,6 @@ router.post('/conversation', authMiddleware, async (req, res) => {
     }
 });
 
-
-
-
 router.get('/conversation/:userId', authMiddleware, async (req, res) => {
     try {
         const userId = req.params.userId;
@@ -45,11 +42,6 @@ router.get('/conversation/:userId', authMiddleware, async (req, res) => {
         res.status(500).json({ error: 'An error occurred' });
     }
 });
-
-
-
-
-
 
     router.get('/receive/:conversationId', authMiddleware, async (req, res) => {
         try {

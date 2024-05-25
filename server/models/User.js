@@ -7,7 +7,9 @@ const User = new Schema({
     diskSpace: {type: Number, default: 1024**3*10},
     usedSpace: {type: Number, default: 0},
     files : [{type: ObjectId, ref:'File'}],
-    roles: [{type: String, ref: 'Role'}]
+    roles: [{type: String, ref: 'Role'}],
+    isActivated: {type:Boolean, default: false},
+    activationLink: {type:String, required: true}
 })
 
 module.exports = model('User', User)

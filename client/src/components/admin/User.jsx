@@ -5,10 +5,11 @@ import axios from 'axios';
 const User = ({ user, onDelete }) => {
     const handleDelete = async () => {
         try {
-            await axios.delete(`http://localhost:5000/api/auth/users/${user._id}`, {
+            await axios.delete(`http://localhost:5000/api/users/${user._id}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             onDelete(user.id);
+            window.location.reload();
         } catch (e) {
             console.error(e);
         }
@@ -17,11 +18,12 @@ const User = ({ user, onDelete }) => {
 
     const handleIncreaseSpace = async (increaseAmount) => {
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/increaseDiskSpace', {
+            const response = await axios.post('http://localhost:5000/api/increaseDiskSpace', {
                 userId: user._id,
                 increaseAmount: increaseAmount
             }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
             alert(response.data.message);
+            window.location.reload();
         } catch (e) {
             console.error(e);
             alert(e.response.data.message);

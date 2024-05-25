@@ -1,11 +1,14 @@
 const fs = require('fs')
 const File = require('../models/File')
-const config = require('config')
+const path = require("path")
+require('dotenv').config();
 
 class FileService {
 
     createDir(file) {
-        const filePath = `${config.get('filePath')}\\${file.user}\\${file.path}`
+      
+    const filePath = this.getPath(file)
+       console.log(filePath)
         return new Promise(((resolve, reject) => {
             try {
                 if (!fs.existsSync(filePath)) {
@@ -30,42 +33,26 @@ class FileService {
     }
 
     deleteDir(file) {
-        const path = this.getPath(file);
+        const filePath = this.getPath(file);
         if (file.type === 'dir') {
-            const dirPath = `${path}\\`;
-            if (fs.existsSync(dirPath)) {
-                fs.rmdirSync(dirPath);
+            if (fs.existsSync(filePath)) {
+                fs.rmdirSync(filePath);
             }
         } else {
-            fs.unlinkSync(path);
+            fs.unlinkSync(filePath);
         }
     }
+
+   
 
 
     getPath(file) {
-        return config.get('filePath') + '\\' + file.user + '\\' + file.path
+        return path.join( 
+            path.join(process.cwd(), process.env.FILE_PATH),
+            file.user+'', 
+            file.path
+        )
     }
-
-
-    async deleteUserFiles(userId) {
-        try {
-            const files = await File.find({ user: userId });
-
-            for (const file of files) {
-                if (file.type === 'dir') {
-                    this.deleteDir(file);
-                } else {
-                    fs.unlinkSync(this.getPath(file));
-                }
-                await File.deleteOne({ _id: file._id });
-            }
-        } catch (e) {
-            console.error(e);
-            throw new Error('Error deleting user files');
-        }
-    }
-
-
 
 }
 

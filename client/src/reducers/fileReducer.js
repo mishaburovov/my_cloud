@@ -6,7 +6,6 @@ const DELETE_FILE = 'DELETE_FILE';
 const UPDATE_FILE = 'UPDATE_FILE';
 
 
-
 const defaultState = {
     files: [],
     currentDir: null,
@@ -19,13 +18,11 @@ export default function fileReducer(state = defaultState, action) {
         case SET_FILES: return {...state, files: action.payload}
         case SET_CURRENT_DIR: return {...state,
             currentDir: action.payload
-           // currentPath: [...state.currentPath, action.payload]
             }
         case ADD_FILE: return {...state, files: [...state.files, action.payload]}
         case SET_POPUP_DISPLAY: return {...state, popupDisplay: action.payload}
         case DELETE_FILE: return {...state, files: [...state.files.filter(file => file._id != action.payload)]}
         case UPDATE_FILE: return { ...state, files: state.files.map((file) => file._id === action.payload._id ? action.payload : file), }
-
         default:
             return state
     }

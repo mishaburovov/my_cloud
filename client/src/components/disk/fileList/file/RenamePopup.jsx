@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { renameFile } from '../../../../action/file';
+import { renameFile, renameDir } from '../../../../action/file';
 
 const RenamePopup = ({ file, closePopup }) => {
     const [newName, setNewName] = useState(file.name);
     const dispatch = useDispatch();
 
+
     const handleRename = (e) => {
         e.stopPropagation();
-        dispatch(renameFile(file._id, newName));
+        if (file.type === 'dir') {
+            dispatch(renameDir(file._id, newName));
+        } else {
+            dispatch(renameFile(file._id, newName));
+        }
         closePopup();
     };
 
@@ -36,3 +41,4 @@ const RenamePopup = ({ file, closePopup }) => {
 };
 
 export default RenamePopup;
+

@@ -8,7 +8,7 @@ import renameImage from '../../../../assets/img/rename.svg';
 import deleteImage from '../../../../assets/img/delete.svg';
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentDir } from '../../../../reducers/fileReducer';
-import { downloadFile, deleteFile } from "../../../../action/file";
+import { downloadFile, deleteFile} from "../../../../action/file";
 import RenamePopup from './RenamePopup';
 
 const File = ({ file }) => {
@@ -35,6 +35,9 @@ const File = ({ file }) => {
     e.stopPropagation();
     dispatch(deleteFile(file));
   }
+
+
+
 
   return (
     <div className='file' onClick={() => openDirHandler(file)}>

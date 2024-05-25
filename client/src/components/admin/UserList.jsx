@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../axios';
 import User from './User';  // Ensure this is the path to your User component
 import './userList.scss'
 
@@ -7,15 +7,10 @@ import './userList.scss'
 const UserList = () => {
     const [users, setUsers] = useState([]);
 
-    useEffect(() => {
-        fetchUsers();
-    }, []);
-
     const fetchUsers = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/auth/users', {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-            });
+            const response = await axiosInstance.get('/users');
+            console.log(response)
             setUsers(response.data);
         } catch (e) {
             console.error('Failed to fetch users:', e);
@@ -24,7 +19,7 @@ const UserList = () => {
 
     const handleDeleteUser = async (userId) => {
         try {
-            await axios.delete(`http://localhost:5000/api/auth/users/${userId}`, {
+            await axios.delete(`http://localhost:5000/api/users/${userId}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setUsers(users.filter(user => user.id !== userId));
@@ -32,6 +27,10 @@ const UserList = () => {
             console.error('Failed to delete user:', e);
         }
     };
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
 
     return (
         <div className='userList'>

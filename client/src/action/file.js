@@ -135,7 +135,7 @@ export function searchFiles(search) {
 export const renameFile = (fileId, newName) => {
     return async dispatch => {
         try {
-            const response = await axios.post(`http://localhost:5000/api/files/rename`, { id: fileId, newName }, {
+            const response = await axios.post(`http://localhost:5000/api/files/renameFile`, { id: fileId, newName }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -148,5 +148,21 @@ export const renameFile = (fileId, newName) => {
     };
 };
 
+///////////////////////////////////////////
 
+export const renameDir = (dirId, newName) => {
+    return async dispatch => {
+        try {
+            const response = await axios.post(`http://localhost:5000/api/files/renameDir`, { id: dirId, newName }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            dispatch(updateFile(response.data));
+        } catch (error) {
+            alert('Ошибка при переименовании директории: ' + error.message);
+            throw error;
+        }
+    };
+};
 

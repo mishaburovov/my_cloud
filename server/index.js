@@ -1,7 +1,8 @@
 const express = require("express");
+require('dotenv').config();
 const mongoose = require("mongoose");
-const config = require("config");
 const fileUpload = require("express-fileupload");
+const cors = require('cors');
 const io = require("socket.io")(8080, {
     cors: { origin: '*' }
 });
@@ -11,25 +12,47 @@ const fileRouter = require("./routes/file.routes");
 const messageRouter = require("./routes/message.routes");
 
 const Message = require('./models/Message');
-const User = require('./models/User');
+const UserModel = require('./models/User');
 const Conversation = require('./models/Conversation');
-
+const cookieParser = require('cookie-parser');
+const errorMiddleware = require('./middleware/error-middleware');
+const filePathMiddleware = require('./middleware/filepath.middleware')
+const path = require('path');
+const initAdmin = require('./initAdmin');
 
 const app = express();
 app.use(fileUpload({}));
 app.use(corsMiddleware);
 app.use(express.json());
+app.use(cookieParser());
+app.use(cors({
+    credentials: true,
+    origin: process.env.CLIENT_URL
+}));
 app.use(express.static("static"));
-
-app.use("/api/auth", authRouter);
+app.use(filePathMiddleware(path.join(__dirname, process.env.FILE_PATH)));
+app.use("/api", authRouter);
 app.use("/api/files", fileRouter);
 app.use("/api/message", messageRouter);
+app.use(errorMiddleware);
 
-const PORT = config.get("serverPort");
+
+const PORT = process.env.PORT;
 
 const start = async () => {
     try {
-        await mongoose.connect("mongodb://127.0.0.1:27017/mydb");
+        await mongoose.connect(process.env.DATABASE_URL);
+
+
+        const admin = await UserModel.findOne({ roles: { $in: ["ADMIN"] } });
+        if (!admin) {
+            await initAdmin();  // Если администратора нет, вызываем функцию инициализации
+        } else {
+            console.log('Admin user already exists.');
+        }
+
+
+
 
         app.listen(PORT, () => {
             console.log("Server started on PORT", PORT);
@@ -48,23 +71,17 @@ io.on("connection", socket => {
     socket.on("sendMessage", async (data) => {
         const { conversationId, senderId, messageText, receiverId, email } = data;
         console.log('Получено сообщение от клиента:', data);
-      
-        
         let conversation;
         if (!conversationId && receiverId) {
             conversation = new Conversation({ members: [senderId, receiverId] });
             await conversation.save();
         }
-
-        
         const newMessage = new Message({
             conversationId: conversation ? conversation._id : conversationId,
             senderId,
             messageText
         });
-
         await newMessage.save();
-
         const message = {
             user: { email: email },
             conversationId: conversation ? conversation._id : conversationId,

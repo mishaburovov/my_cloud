@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
+import useAuth from "../hooks/useAuth"
 import Registration from "./authorization/Registration";
 import Login from "./authorization/Login";
 import Disk from "./disk/Disk";
@@ -11,34 +12,33 @@ import { auth } from "../action/user";
 import './app.scss';
 
 function App() {
-    const { isAuth, roles } = useSelector(state => state.user);
+    const { roles } = useSelector(state => state.user);
+    const { isAuth } = useAuth()
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-
     useEffect(() => {
-        dispatch(auth());
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (isAuth !== null) {
-            if (roles.includes('ADMIN')) {
-                navigate("/admin");
-            } else {
-                navigate(isAuth ? "/" : "/login");
-            }
+        if(!isAuth()){
+            dispatch(auth());
         }
-    }, [isAuth]);
+    }, [isAuth()]);
 
-
-
+    useEffect(() => {
+        if(isAuth()){
+            isAuth() 
+            && roles.includes('ADMIN') ? navigate("/admin") : navigate("/");
+        }else{
+            navigate("/login")
+        }
+    
+    }, [isAuth()]);
 
 
     return (
         <div className="app">
             <Navbar/>
             <div className="container app__container">
-                {!isAuth ?
+                {!isAuth() ?
                 <Routes>
                     <Route path="/registration" element={<Registration/>}/>
                     <Route path="/authorization" element={<Login/>}/>
