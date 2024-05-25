@@ -46,10 +46,6 @@ router.post('/registration',
             await newConversation.save();
             await new Message({ conversationId: newConversation._id, senderId: admin.id, messageText: 'Welcome to the platform!' }).save();
 
-
-
-
-
         await fileService.createDir(new File({user:user.id, name: ''}))
         return res.json({message: "User was created"})
 
