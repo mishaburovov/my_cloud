@@ -44,17 +44,6 @@ const start = async () => {
     try {
         await mongoose.connect(process.env.DATABASE_URL);
 
-
-        const admin = await UserModel.findOne({ roles: { $in: ["ADMIN"] } });
-        if (!admin) {
-            await initAdmin();  // Если администратора нет, вызываем функцию инициализации
-        } else {
-            console.log('Admin user already exists.');
-        }
-
-
-
-
         app.listen(PORT, () => {
             console.log("Server started on PORT", PORT);
         });
