@@ -2,6 +2,7 @@ const UserModel = require('./models/User');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const fileService = require('./services/fileService');
+const File = require("./models/File")
 require('dotenv').config();
 
 async function init() {
