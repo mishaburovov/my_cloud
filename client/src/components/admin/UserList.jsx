@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../axios';
 import User from './User';  // Ensure this is the path to your User component
 import './userList.scss'
-import { API_URL } from '../../config';
 
 
 const UserList = () => {
@@ -20,7 +19,7 @@ const UserList = () => {
 
     const handleDeleteUser = async (userId) => {
         try {
-            await axios.delete(`${API_URL}api/users/${userId}`, {
+            await axiosInstance.delete(`/users/${userId}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setUsers(users.filter(user => user.id !== userId));

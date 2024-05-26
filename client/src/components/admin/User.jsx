@@ -1,12 +1,12 @@
 import React from 'react';
 import './user.scss';
-import axios from 'axios';
-import { API_URL } from '../../config';
+import axiosInstance from '../../axios';
+
 
 const User = ({ user, onDelete }) => {
     const handleDelete = async () => {
         try {
-            await axios.delete(`${API_URL}api/users/${user._id}`, {
+            await axiosInstance.delete(`/users/${user._id}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             onDelete(user.id);
@@ -19,7 +19,7 @@ const User = ({ user, onDelete }) => {
 
     const handleIncreaseSpace = async (increaseAmount) => {
         try {
-            const response = await axios.post('${API_URL}api/increaseDiskSpace', {
+            const response = await axiosInstance.post(`/increaseDiskSpace`, {
                 userId: user._id,
                 increaseAmount: increaseAmount
             }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });

@@ -1,27 +1,24 @@
-import axios from 'axios'
+import axiosInstance from '../axios'
 import {addFile, setFiles, deleteFileAction, updateFile} from "../reducers/fileReducer";
 import {addUploadFile, changeUploadFile, showUploader} from "../reducers/uploadReducer";
 import {hideLoader, showLoader} from "../reducers/appReducer";
-import { API_URL } from '../config';
-
 
 export function getFiles(dirId, sort) {
     return async dispatch => {
         try {
             dispatch(showLoader())
-            // let url = `http://localhost:5000/api/files`
-            let url = `${API_URL}api/files`
+            let url = `/files`
 
             if (dirId) {
-                url = `${API_URL}api/files?parent=${dirId}`
+                url = `/files?parent=${dirId}`
             }
             if (sort) {
-                url = `${API_URL}api/files?sort=${sort}`
+                url = `/files?sort=${sort}`
             }
             if (dirId && sort) {
-                url = `${API_URL}api/files?parent=${dirId}&sort=${sort}`
+                url = `/files?parent=${dirId}&sort=${sort}`
             }
-            const response = await axios.get(url, {
+            const response = await axiosInstance.get(url, {
             
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
             })
@@ -37,7 +34,7 @@ export function getFiles(dirId, sort) {
 export function createDir(dirId, name) {
     return async dispatch => {
         try {
-            const response = await axios.post(`${API_URL}api/files`,{
+            const response = await axiosInstance.post(`/files`,{
                 name,
                 parent: dirId,
                 type: 'dir'
@@ -52,20 +49,21 @@ export function createDir(dirId, name) {
 }
 
 
-export function uploadFile(file, dirId) {
+export const uploadFile = (file, dirId) => {
     return async dispatch => {
         try {
-            const formData = new FormData()
-            formData.append('file', file)
+            const formData = new FormData();
+            formData.append('file', file);
             if (dirId) {
-                formData.append('parent', dirId)
+                formData.append('parent', dirId);
             }
-            const uploadFile = { name: file.name, progress: 0, id: Date.now() }
-            dispatch(showUploader())
-            dispatch(addUploadFile(uploadFile))
 
-            const response = await axios.post(`${API_URL}api/files/upload`, formData, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            const uploadFile = { name: file.name, progress: 0, id: Date.now() };
+            dispatch(showUploader());
+            dispatch(addUploadFile(uploadFile));
+
+            const response = await axiosInstance.post(`/files/upload`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
                 onUploadProgress: progressEvent => {
                     const totalLength = progressEvent.total;
                     if (totalLength) {
@@ -81,29 +79,36 @@ export function uploadFile(file, dirId) {
         }
     }
 }
+////????????????????
 
 export async function downloadFile(file) {
-    const response = await fetch(`${API_URL}api/files/download?id=${file._id}`, {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+    try {
+        const response = await axiosInstance.get(`/files/download`, {
+            responseType: 'blob',
+            params: {
+                id: file._id
+            }
+        });
+
+        if (response.status === 200) {
+            const blob = new Blob([response.data], { type: response.data.type });
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = `${file.name}${file.type === 'dir' ? '.zip' : ''}`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
         }
-    });
-    if (response.status === 200) {
-        const blob = await response.blob()
-        const downloadUrl = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = downloadUrl
-        link.download = file.name + (file.type === 'dir' ? '.zip' : '')
-        document.body.appendChild(link)
-        link.click()
-        link.remove()
+    } catch (e) {
+        alert(e.response?.data?.message || 'Ошибка при загрузке файла.');
     }
 }
 
 export function deleteFile(file) {
     return async dispatch => {
         try {
-            const response = await axios.delete(`${API_URL}api/files?id=${file._id}`,{
+            const response = await axiosInstance.delete(`/files?id=${file._id}`,{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -120,7 +125,7 @@ export function deleteFile(file) {
 export function searchFiles(search) {
     return async dispatch => {
         try {
-            const response = await axios.get(`${API_URL}api/files/search?search=${search}`,{
+            const response = await axiosInstance.get(`/files/search?search=${search}`,{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -138,7 +143,7 @@ export function searchFiles(search) {
 export const renameFile = (fileId, newName) => {
     return async dispatch => {
         try {
-            const response = await axios.post(`${API_URL}api/files/renameFile`, { id: fileId, newName }, {
+            const response = await axiosInstance.post(`/files/renameFile`, { id: fileId, newName }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -156,7 +161,7 @@ export const renameFile = (fileId, newName) => {
 export const renameDir = (dirId, newName) => {
     return async dispatch => {
         try {
-            const response = await axios.post(`${API_URL}api/files/renameDir`, { id: dirId, newName }, {
+            const response = await axiosInstance.post(`/files/renameDir`, { id: dirId, newName }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }

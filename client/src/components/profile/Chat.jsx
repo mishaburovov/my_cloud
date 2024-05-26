@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { io } from 'socket.io-client';
-import axios from 'axios';
 import './chat.scss';
-import { API_URL } from "../../config";
+import axiosInstance from "../../axios";
 
 const Chat = ({ conversationId, userId, receiverId }) => {
     const [messages, setMessages] = useState([]);
@@ -41,7 +40,7 @@ const Chat = ({ conversationId, userId, receiverId }) => {
         }
 
         try {
-            const response = await axios.get(`${API_URL}api/message/receive/${conversationId}`, {
+            const response = await axiosInstance.get(`/message/receive/${conversationId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessages(response.data);
