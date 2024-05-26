@@ -18,7 +18,7 @@ const cookieParser = require('cookie-parser');
 const errorMiddleware = require('./middleware/error-middleware');
 const filePathMiddleware = require('./middleware/filepath.middleware')
 const path = require('path');
-const initAdmin = require('./initAdmin');
+const init = require('./init');
 
 const app = express();
 app.use(fileUpload({}));
@@ -44,6 +44,7 @@ const start = async () => {
     try {
         await mongoose.connect(process.env.DATABASE_URL);
 
+        init()
         app.listen(PORT, () => {
             console.log("Server started on PORT", PORT);
         });

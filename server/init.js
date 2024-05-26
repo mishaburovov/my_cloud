@@ -4,7 +4,7 @@ const uuid = require('uuid');
 const fileService = require('./services/fileService');
 require('dotenv').config();
 
-async function initAdmin() {
+async function init() {
     try {
         const email = process.env.ADMIN_EMAIL;  
         const password = process.env.ADMIN_PASSWORD; 
@@ -26,4 +26,4 @@ async function initAdmin() {
     }
 }
 
-module.exports = initAdmin;
+module.exports = init;
