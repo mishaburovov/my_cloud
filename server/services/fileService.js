@@ -7,7 +7,7 @@ class FileService {
 
     createDir(file) {
       
-    const filePath = this.getPath(file)
+       const filePath = this.getPath(file)
        console.log(filePath)
         return new Promise(((resolve, reject) => {
             try {
@@ -47,6 +47,7 @@ class FileService {
 
 
     getPath(file) {
+        console.log(process, process.cwd())
         return path.join( 
             path.join(process.cwd(), process.env.FILE_PATH),
             file.user+'', 
